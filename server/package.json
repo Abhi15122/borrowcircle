@@ -1,0 +1,39 @@
+{
+  "name": "@borrowcircle/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "tsx src/scripts/setup.ts",
+    "dev": "tsx watch src/server.ts",
+    "dev:db": "tsx src/scripts/local-database.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "start": "node --env-file-if-exists=.env dist/server.js",
+    "seed": "tsx src/scripts/seed.ts"
+  },
+  "dependencies": {
+    "@borrowcircle/shared": "*",
+    "argon2": "^0.44.0",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0",
+    "mongoose": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/supertest": "^6.0.3",
+    "mongodb-memory-server": "^11.3.0",
+    "supertest": "^7.1.0",
+    "tsx": "^4.20.0"
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "disablePostinstall": true
+    }
+  }
+}

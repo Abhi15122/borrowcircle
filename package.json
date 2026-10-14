@@ -1,0 +1,43 @@
+{
+  "name": "borrowcircle",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "setup": "npm run setup -w @borrowcircle/server",
+    "dev": "npm run build -w @borrowcircle/shared && concurrently -k -n database,api,web,shared \"npm run dev:db -w @borrowcircle/server\" \"npm run dev -w @borrowcircle/server\" \"npm run dev -w @borrowcircle/client\" \"npm run watch -w @borrowcircle/shared\"",
+    "dev:external": "npm run build -w @borrowcircle/shared && concurrently -k -n api,web,shared \"npm run dev -w @borrowcircle/server\" \"npm run dev -w @borrowcircle/client\" \"npm run watch -w @borrowcircle/shared\"",
+    "build": "npm run build -w @borrowcircle/shared && npm run build -w @borrowcircle/server && npm run build -w @borrowcircle/client",
+    "typecheck": "npm run build -w @borrowcircle/shared && npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "start": "npm run start -w @borrowcircle/server",
+    "seed": "npm run seed -w @borrowcircle/server",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run lint && npm run build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.18.0",
+    "concurrently": "^9.2.0",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.4.0",
+    "jiti": "^2.7.0",
+    "prettier": "^3.6.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^5.0.4"
+  }
+}
