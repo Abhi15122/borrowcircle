@@ -16,7 +16,7 @@
     "dev": "npm run build -w @borrowcircle/shared && concurrently -k -n database,api,web,shared \"npm run dev:db -w @borrowcircle/server\" \"npm run dev -w @borrowcircle/server\" \"npm run dev -w @borrowcircle/client\" \"npm run watch -w @borrowcircle/shared\"",
     "dev:external": "npm run build -w @borrowcircle/shared && concurrently -k -n api,web,shared \"npm run dev -w @borrowcircle/server\" \"npm run dev -w @borrowcircle/client\" \"npm run watch -w @borrowcircle/shared\"",
     "build": "npm run build -w @borrowcircle/shared && npm run build -w @borrowcircle/server && npm run build -w @borrowcircle/client",
-    "typecheck": "npm run build -w @borrowcircle/shared && npm run typecheck --workspaces --if-present",
+    "typecheck": "npm run build -w @borrowcircle/shared && tsc --noEmit -p tsconfig.json && npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

@@ -40,7 +40,6 @@ server/src/
   config/              Environment and database setup
   scripts/             Setup, local database and fictional seed
 shared/src/            Browser-safe schemas, types, constants and dates
-docs/                  Project documentation
 ```
 
 ## Setup and running
@@ -110,6 +109,36 @@ For production, build and provide the required variables with
 `APP_ORIGIN`, and use `TRUST_PROXY=1` only behind one trusted proxy.
 Express serves built React and `/api` from one origin and binds `0.0.0.0`.
 The database helper is development-only.
+
+### Deploying on Vercel
+
+Import this repository with its root directory set to `.`. The included
+`vercel.json` builds all workspaces, publishes `client/dist`, and routes
+`/api/*` to a single Express function. React and the API share one HTTPS origin.
+The API reuses database connections between requests and waits for database
+capability checks and indexes before serving traffic.
+
+Set these Vercel environment variables before deploying:
+
+| Variable         | Value                                                               |
+| ---------------- | ------------------------------------------------------------------- |
+| `NODE_ENV`       | `production`                                                        |
+| `APP_ORIGIN`     | The exact production URL, such as `https://your-project.vercel.app` |
+| `MONGODB_URI`    | An Atlas connection string with a dedicated BorrowCircle database   |
+| `SESSION_SECRET` | A newly generated random secret of at least 32 characters           |
+| `TRUST_PROXY`    | `1`                                                                 |
+| `NODEJS_HELPERS` | `0`, so Express handles JSON parsing and body-size limits           |
+
+Use an Atlas database user with access limited to the application's database.
+Configure Atlas network access for the deployment before testing. Never use
+the local `127.0.0.1` database URI in Vercel or commit deployment credentials.
+Redeploy after changing environment variables. Preview deployments need their
+own exact `APP_ORIGIN` and a separate database for isolated testing.
+
+After deployment, check `/api/health`, registration, login/session restoration,
+item creation, and borrowing through return. A successful frontend build alone
+does not verify the database or authentication. The initial deployment has no
+seed data; register accounts and add items through the application.
 
 ## Borrowing rules and concurrency
 

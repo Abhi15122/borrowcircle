@@ -10,7 +10,7 @@ import { errorHandler } from './middleware/errors.js';
 import { apiRoutes } from './routes/api.js';
 import { AppError } from './utils/errors.js';
 
-export function createApp(environment: Environment) {
+export function createApp(environment: Environment, options: { serveClient?: boolean } = {}) {
   const app = express();
   app.disable('x-powered-by');
   if (environment.TRUST_PROXY === '1') app.set('trust proxy', 1);
@@ -22,6 +22,7 @@ export function createApp(environment: Environment) {
     mongoUrl: environment.MONGODB_URI,
     collectionName: 'sessions',
     ttl: 7 * 24 * 3600,
+    mongoOptions: { maxPoolSize: 10, minPoolSize: 0, maxIdleTimeMS: 60_000 },
   });
   app.use(
     session({
@@ -46,7 +47,7 @@ export function createApp(environment: Environment) {
   app.use('/api', () => {
     throw new AppError(404, 'API endpoint not found');
   });
-  if (environment.NODE_ENV === 'production') {
+  if (environment.NODE_ENV === 'production' && options.serveClient !== false) {
     const clientPath = fileURLToPath(new URL('../../client/dist/', import.meta.url));
     app.use(express.static(clientPath));
     app.get('/{*path}', (_request, response) =>
